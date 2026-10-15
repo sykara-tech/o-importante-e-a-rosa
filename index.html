@@ -4,248 +4,358 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#3b1738">
-<meta name="description" content="Cantinho de Luz para Emily — uma história de fé, rosas e confiança. Feito com amor por Guilherme.">
-<title>Emily | O importante é a rosa</title>
+<meta name="description" content="Cantinho de Luz para Emily — aperte e descubra.">
+<title>Emily | Aperte-me</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+:root{
+  --wine:#3b1738;
+  --wine2:#57264c;
+  --rose:#b93459;
+  --pink:#e6a6b1;
+  --gold:#d8b46d;
+  --cream:#fbf7f1;
+  --ink:#38283b;
+  --muted:#817782;
+  --serif:"Playfair Display",Georgia,serif;
+  --sans:"DM Sans",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--wine);
+  color:white;
+  font-family:var(--sans);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  position:relative;
+}
+
+/* Fundo sutil */
+.bg-glow{
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 30% 20%, #57264c88 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, #b9345933 0%, transparent 45%),
+    linear-gradient(160deg,#1f0f1c 0%,#3b1738 50%,#271329 100%);
+  z-index:0;
+}
+
+/* Container principal */
+.stage{
+  position:relative;z-index:2;
+  width:min(920px,94vw);
+  height:min(560px,78vh);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 30px 80px #00000066, 0 0 0 1px #ffffff12;
+  background:#1a0c18;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Vídeo */
+video{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity .6s ease;
+  background:#0d0610;
+}
+video.playing{opacity:1}
+
+/* Overlay inicial "Aperte-me" */
+.play-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:28px;
+  background:linear-gradient(160deg,#261229ee 0%,#3b1738cc 50%,#1f0f1cee 100%);
+  z-index:5;
+  cursor:pointer;
+  transition:opacity .5s ease, visibility .5s;
+}
+.play-overlay.hidden{
+  opacity:0;visibility:hidden;pointer-events:none;
+}
+
+.play-btn{
+  width:96px;height:96px;
+  border-radius:50%;
+  background:var(--rose);
+  border:3px solid #ffffff40;
+  display:grid;place-items:center;
+  box-shadow:0 12px 40px #b9345966, 0 0 0 12px #b9345922;
+  transition:transform .25s ease, box-shadow .25s, background .2s;
+  position:relative;
+}
+.play-btn::after{
+  content:"";
+  width:0;height:0;
+  border-style:solid;
+  border-width:14px 0 14px 24px;
+  border-color:transparent transparent transparent white;
+  margin-left:6px;
+}
+.play-overlay:hover .play-btn{
+  transform:scale(1.08);
+  background:#a02a4a;
+  box-shadow:0 16px 50px #b9345988, 0 0 0 16px #b9345933;
+}
+
+.play-label{
+  font:600 22px/1.2 var(--serif);
+  letter-spacing:1px;
+  color:#f8e8ee;
+  text-align:center;
+}
+.play-label small{
+  display:block;
+  margin-top:8px;
+  font:500 12px var(--sans);
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:var(--gold);
+  opacity:.9;
+}
+
+/* Rosa decorativa */
+.rose-deco{
+  position:absolute;
+  bottom:24px;right:28px;
+  width:48px;opacity:.35;
+  pointer-events:none;
+  z-index:4;
+}
+.rose-deco svg{width:100%;height:auto}
+
+/* Overlay final "Espero que goste!" */
+.end-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:22px;
+  background:linear-gradient(160deg,#1f0f1cf2 0%,#3b1738ee 55%,#261229f5 100%);
+  z-index:6;
+  opacity:0;visibility:hidden;
+  transition:opacity .7s ease, visibility .7s;
+  padding:30px;
+  text-align:center;
+}
+.end-overlay.show{
+  opacity:1;visibility:visible;
+}
+
+.end-overlay .eyebrow{
+  font-size:11px;
+  letter-spacing:2.5px;
+  font-weight:700;
+  color:var(--gold);
+  text-transform:uppercase;
+}
+.end-overlay h2{
+  font:600 clamp(28px,5vw,42px)/1.15 var(--serif);
+  color:white;
+  max-width:420px;
+}
+.end-overlay h2 em{color:#e7b1bd;font-style:italic}
+
+.btn-gostei{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
+  background:var(--rose);
+  color:white;
+  padding:16px 32px;
+  border-radius:6px;
+  font:600 15px var(--sans);
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 10px 30px #b9345955;
+  transition:transform .2s, background .2s, box-shadow .2s;
+}
+.btn-gostei:hover{
+  background:#a02a4a;
+  transform:translateY(-3px);
+  box-shadow:0 14px 36px #b9345977;
+}
+.btn-gostei span{font-size:18px}
+
+/* Créditos discretos */
+.credit{
+  position:fixed;
+  bottom:18px;left:0;right:0;
+  text-align:center;
+  font-size:12px;
+  color:#e8d5df66;
+  z-index:3;
+  pointer-events:none;
+}
+
+/* Controles mínimos do vídeo (aparecem só durante a reprodução) */
+.video-controls{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  padding:16px 20px;
+  background:linear-gradient(transparent, #0d0610cc);
+  display:flex;align-items:center;gap:14px;
+  z-index:4;
+  opacity:0;
+  transition:opacity .3s;
+}
+.stage:hover .video-controls,
+.video-controls:focus-within{opacity:1}
+video.playing ~ .video-controls{opacity:1}
+
+.progress{
+  flex:1;height:4px;
+  background:#ffffff22;
+  border-radius:2px;
+  cursor:pointer;
+  overflow:hidden;
+}
+.progress-bar{
+  height:100%;width:0%;
+  background:var(--rose);
+  border-radius:2px;
+  transition:width .1s linear;
+}
+.time{font-size:12px;color:#e8d5df;min-width:70px;text-align:right}
+
+/* Mobile */
+@media(max-width:600px){
+  .stage{height:min(480px,70vh);border-radius:14px}
+  .play-btn{width:80px;height:80px}
+  .play-btn::after{border-width:12px 0 12px 20px}
+  .play-label{font-size:18px}
+  .end-overlay h2{font-size:26px}
+  .btn-gostei{padding:14px 26px;font-size:14px}
+}
+</style>
 </head>
 <body>
 
+<div class="bg-glow"></div>
 
-<header class="header">
-  <a class="brand" href="#inicio">
-    <span class="brand-icon"><img src="santatere.png" alt=""></span>
-    <span><b>Emily</b><small>Sua Vida Me Inspira!</small></span>
-  </a>
-  <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false">
-    <img src="menu.svg" alt="">
-  </button>
-  <nav id="nav">
-    <a href="#dedicatoria">Dedicatória</a>
-    <a href="#testemunho">Testemunho</a>
-    <a href="#memorias">Memórias</a>
-    <a href="#palavras">Palavras</a>
-    <a href="#musica">Música</a>
-  </nav>
-</header>
+<div class="stage" id="stage">
+  <!-- 
+    SUBSTITUA o src abaixo pelo caminho do seu vídeo.
+    Vídeo local conectado: video-emily.mp4
+    Ou use um link direto de vídeo.
+  -->
+  <video id="video" playsinline preload="metadata"
+    src="video-emily.mp4"
+    poster="">
+    Seu navegador não suporta vídeo.
+  </video>
 
-<main>
-  <!-- HERO -->
-  <section class="hero" id="inicio">
-    <div class="hero-photo"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <span class="eyebrow"><i></i> A Fé Nos Move ao Infinito!</span>
-      <p class="pretitle">Para Emily, com muito carinho</p>
-      <h1>O importante<br>é a <em>rosa.</em></h1>
-      <p class="hero-text">Uma história de encontro, perfume de rosas e a pequena via de Santa Teresinha. Que a luz continue florescendo no seu coração.</p>
-      <a class="main-btn" href="#dedicatoria">Entrar neste cantinho <span>↓</span></a>
+  <!-- Overlay inicial -->
+  <div class="play-overlay" id="playOverlay" role="button" tabindex="0" aria-label="Aperte para reproduzir o vídeo">
+    <div class="play-btn"></div>
+    <div class="play-label">
+      Aperte-me
+      <small>O importante é a rosa</small>
     </div>
-    <div class="hero-portrait">
-      <img src="emily-destaque.jpg" alt="Emily">
-      <div class="portrait-frame"></div>
-    </div>
-    <div class="hero-bottom">
-      </div>
-  </section>
+  </div>
 
-  <!-- DEDICATÓRIA (texto do Guilherme, como você escreveu) -->
-  <section class="dedication section" id="dedicatoria">
-    <div class="sacred-wrap">
-      <img src="sagrado-coracao.png" alt="Sagrado Coração de Jesus" class="sacred">
+  <!-- Controles simples -->
+  <div class="video-controls" id="controls">
+    <div class="progress" id="progress">
+      <div class="progress-bar" id="progressBar"></div>
     </div>
-    <div class="dedication-copy">
-      <p class="overline">UM ENCONTRO QUE DEIXA MARCAS</p>
-      <h2>Há encontros que passam.<br>Outros <em>florescem para sempre.</em></h2>
-      <div class="letter">
-        <p><strong>Emily, sou imensamente grato a Deus pela sua vida! ❤️🙏🏻</strong></p>
-        <p>Às vezes, paro para pensar em como Deus é maravilhoso ao colocar pessoas especiais em nosso caminho. E, quando penso na nossa amizade, meu coração se enche de gratidão por tudo o que vivemos e por tudo o que você representa na minha caminhada.</p>
-        <p>Parece que foi ontem que te conheci no EPA. Quem diria que aquele menino que encheu tanto o seu saco para você ser minha madrinha de “EPA”, uma coisa que eu mesmo tinha inventado, encontraria em você uma amizade tão verdadeira e especial? Acredito que foi Deus que quis Assim!</p>
-        <p>Logo depois, você me acolheu na Pastoral dos Coroinhas, caminhou comigo, foi minha parceira, me escutou tantas vezes, me aconselhou, me orientou e esteve presente em tantos momentos. Aos poucos, aquela amizade foi crescendo, e construímos uma amizade <em>best</em> que hoje guardo com muito carinho no coração.</p>
-        <p>São quase <strong>5 anos de amizade</strong>, de histórias, conversas, aprendizados, risadas e tantos momentos que fizeram a nossa caminhada ser especial. E, durante todo esse tempo, uma das coisas pelas quais mais agradeço a Deus é ter colocado você na minha vida. Obrigado por me acolher, por confiar em mim, por me ouvir e por ser essa companhia tão especial na minha caminhada. Talvez você nem imagine o quanto cada gesto seu, cada conselho e cada palavra fizeram diferença para mim.</p>
-        <p>Emily, saiba que, todos os dias, peço a Deus pela sua vida, pela sua caminhada, pelos seus sonhos, pelas suas escolhas, pela sua felicidade e por todas as coisas bonitas que você ainda deseja realizar. Peço que Ele fortaleça seu coração nos dias difíceis, ilumine seus passos quando surgirem dúvidas e nunca permita que falte fé, esperança e amor em sua vida.</p>
-        <p>Que Nossa Senhora esteja sempre à sua frente, cobrindo você com seu manto de amor e proteção. Que São Tarcísio, nosso querido padroeiro e exemplo de amor ao serviço do altar, interceda por você e fortaleça sua missão. E que Santa Teresinha do Menino Jesus ensine você a viver cada dia com simplicidade, amor e confiança em Deus, fazendo florescer pequenas rosas de esperança por onde passar. 🌹🙏🏻</p>
-        <p>Que você nunca se esqueça de que sua vida é um presente de Deus e que sua presença também é um presente na vida das pessoas que têm a alegria de caminhar ao seu lado. Sou muito feliz por ter encontrado em você não apenas uma amiga, mas uma companheira de caminhada, alguém com quem compartilho a fé, a amizade e tantos momentos que levarei comigo.</p>
-        <p><strong>Obrigado por sua vida, Emily! Obrigado por esses quase cinco anos de amizade, por cada conversa, cada conselho, cada acolhida e por fazer parte da minha história.</strong> Que Deus conserve nossa amizade, fortaleça nossos laços e nos permita continuar caminhando juntos, sempre com Ele no centro de tudo.</p>
-        <p>E, se eu pudesse voltar àquele dia do EPA, faria tudo novamente: encheria seu saco para ser minha madrinha, inventaria tudo outra vez e pediria a Deus que aquela história continuasse se transformando nessa amizade tão bonita que temos hoje. Kkkkk. ❤️</p>
-        <p>Que Nossa Senhora, São Tarcísio e Santa Teresinha intercedam sempre por você, Emily, e que Deus abençoe abundantemente cada passo da sua vida.</p>
-        <p><strong>Gosto muito de você e agradeço a Deus todos os dias pelo dom da sua vida e pela graça de ter você na minha caminhada. Que nossa amizade continue sendo instrumento do amor de Deus e que nunca nos faltem fé, motivos para sorrir e vontade de continuar caminhando juntos!</strong> ❤️🙏🏻🌹</p>
-      </div>
-      <div class="signature">Com amor, Guilherme <span></span></div>
-    </div>
-  </section>
+    <span class="time" id="time">0:00 / 0:00</span>
+  </div>
 
-  <!-- ROSA -->
-  <section class="rose-section">
-    <div class="rose-art" aria-hidden="true">
-      <svg viewBox="0 0 180 230">
-        <path d="M91 218 C88 170 105 132 91 92" stroke="#77906b" stroke-width="5" fill="none"/>
-        <path d="M92 168 Q48 135 35 157 Q61 181 92 168" fill="#6e8a61"/>
-        <path d="M96 144 Q137 111 147 132 Q129 156 96 144" fill="#829a70"/>
-        <path d="M91 105 C54 95 45 66 68 48 C57 18 91 7 106 29 C133 15 153 46 134 66 C148 92 116 112 91 105Z" fill="#b6294c"/>
-        <path d="M91 102 C65 83 77 62 93 60 C75 42 103 28 117 48 C138 70 113 95 91 102Z" fill="#e95b75"/>
-        <path d="M90 99 C78 80 91 70 102 77 C116 85 103 98 90 99Z" fill="#8f1839"/>
-        <path d="M64 49 Q48 43 57 29 Q74 36 73 48M129 51 Q149 41 144 28 Q126 33 124 47" fill="#d13a5a"/>
-      </svg>
-    </div>
-    <div class="rose-copy">
-      <p class="overline">UM LEMA PARA LEVAR NA ALMA</p>
-      <h2>“O importante<br>é a <em>rosa.”</em></h2>
-      <p>Que a rosa represente o amor que se oferece, a amizade que acolhe e a fé que nos ajuda a florescer mesmo em tempos difíceis.</p>
-      <span class="rose-caption">“Compreendi que meu amor não se devia traduzir somente por palavras... o amor engloba todas as vocações, que o amor era tudo.” </span>
-    </div>
-  </section>
+  <!-- Overlay final -->
+  <div class="end-overlay" id="endOverlay">
+    <p class="eyebrow">Com carinho</p>
+    <h2>Espero que <em>goste!</em></h2>
+    <a class="btn-gostei" href="cantinho.html">
+      Entrar no cantinho <span>→</span>
+    </a>
+  </div>
 
-  <!-- TESTEMUNHO -->
-  <section class="testimony section" id="testemunho">
-    <div class="section-title">
-      <p class="overline"></p>
-      <h2>Seu Testemunho<br> de vida <em>mim Inspira!</em></h2>
-    </div>
-    <div class="testimony-card">
-      <div class="testimony-quote"></div>
-      <div class="testimony-text">
-        <p>Compartilho aqui, de forma breve, um pouco dessa história que guardo com tanto carinho. Eu havia pensado em compartilhá-la no dia de Santa Teresinha, mas escolhi o dia 4 de outubro, na solenidade de São Francisco de Assis, porque foi exatamente neste dia, há um ano, que começou para mim uma história muito bonita com Santa Teresinha do Menino Jesus.</p>
-        <p>Naquele dia, logo após servir na Santa Missa, pedi a Deus que me mostrasse qual santo seria meu amigo e intercessor de uma maneira especial. Eu admirava muitos santos, mas ainda não sabia dizer qual deles ocupava esse lugar tão querido no meu coração.</p>
-        <p>Depois da Missa, cheguei sozinha em casa e fui rezar, conversando com Deus sobre aquele pedido. Foi então que senti um perfume muito doce de rosas. Na primeira vez, achei que pudesse ser algo perto de mim… até que o cheiro parou. Só depois percebi que não havia nada ao meu redor que pudesse explicar aquele perfume.</p>
-        <p>Pouco depois, senti novamente. Era um cheiro que nunca havia sentido antes e que nunca mais senti em nenhum outro lugar. Foi assim que entendi em meu coração que era Santa Teresinha.</p>
-        <p>Olhando para trás, percebi que ela já estava presente em pequenas coisas: a primeira imagem de um santo que ganhei foi dela, e o primeiro livro sobre a vida de um santo que li também contava sua história.</p>
-        <p>Depois disso, outras experiências aconteceram e deixaram em minha vida um rastro muito bonito de sua intercessão. Uma delas foi um sonho, no início deste ano, em que ela organizava um quarto que compreendi como sendo meu próprio coração e minha vida. Ela dizia que algumas coisas seriam retiradas, pois não caberiam estar ali, e outras estavam por vir, mas que no momento eu ainda não poderia saber o que chegaria.</p>
-        <p>Não sei explicar tudo o que vivi, mas guardo cada momento com muito carinho e, acima de tudo, com gratidão a Deus. Ainda tenho muito a aprender com Teresinha: a viver sua pequena via, a buscar a vontade de Deus com sabedoria e humildade e, principalmente, a confiar Nele, mesmo quando não consigo compreender Seus planos para a minha vida.</p>
-        <p class="closing">Que Deus conceda-nos a graça de, pouco a pouco, aprender a nos abandonar em Suas mãos e deixar que Ele conduza nossos caminhos segundo a Sua vontade.</p>
-        <blockquote class="final-quote">“É a confiança e somente a confiança que deve conduzir-nos ao Amor.”</blockquote>
-        <cite>— Santa Teresinha do Menino Jesus</cite>
-        <p>Testemunho de Vida - Emily Lorrane</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- GALERIA -->
-  <section class="gallery-section" id="memorias">
-    <div class="section gallery-inner">
-      <div class="section-title light">
-        <p class="overline">ÁLBUM DE MEMÓRIAS</p>
-        <h2>Momentos guardados<br><em>no coração.</em></h2>
-      </div>
-      <div class="gallery masonry">
-        <button class="photo"><img src="emily-destaque.jpg" alt="Emily"></button>
-        <button class="photo"><img src="grupo-igreja.jpg" alt="Grupo na igreja"></button>
-        <button class="photo"><img src="abraco.jpg" alt="Abraço de amizade"></button>
-        <button class="photo"><img src="kolbe-servidores.jpg" alt="Servidores com São Maximiliano Kolbe"></button>
-        <button class="photo"><img src="img_3981.jpeg" alt="Amizade"></button>
-        <button class="photo"><img src="img_3990.jpeg" alt="Serviço"></button>
-        <button class="photo"><img src="img_3982.jpeg" alt="Sorrisos"></button>
-        <button class="photo"><img src="img_3988.jpeg" alt="Comunidade"></button>
-        <button class="photo"><img src="img_3980.jpeg" alt="Casa de Deus"></button>
-        <button class="photo"><img src="img_3987.jpeg" alt="Coração disponível"></button>
-        <button class="photo"><img src="img_3993.jpeg" alt="Família de fé"></button>
-        <button class="photo"><img src="img_3989.jpeg" alt="Memórias"></button>
-        <button class="photo"><img src="img_3985.jpeg" alt="Luz"></button>
-        <button class="photo"><img src="img_3992.jpeg" alt="Caminhada"></button>
-        <button class="photo"><img src="epa.png" alt="Caminhada"></button>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- PALAVRAS -->
-  <section class="section faith" id="palavras">
-    <div class="faith-intro">
-      <p class="overline">PALAVRAS QUE ILUMINAM</p>
-      <h2>Frases para<br><em>seguir florescendo.</em></h2>
-      <p>Que estas palavras de santos e da Escritura sejam companhia em cada passo.</p>
-      <img src="santa-teresa.png" alt="Santa Teresinha" class="saint-img">
-    </div>
-    <div class="verse-list">
-      <article class="verse">
-        <span>01</span>
-        <blockquote>“Nada te perturbe, nada te espante. Tudo passa. Deus não muda. A paciência tudo alcança. Quem a Deus tem, nada lhe falta. Só Deus basta.”</blockquote>
-        <small>Santa Teresa d’Ávila</small>
-      </article>
-      <article class="verse">
-        <span>02</span>
-        <blockquote>“É a confiança e somente a confiança que deve conduzir-nos ao Amor.”</blockquote>
-        <small>Santa Teresinha do Menino Jesus</small>
-      </article>
-      <article class="verse">
-        <span>03</span>
-        <blockquote>“A Eucaristia é a minha autoestrada para o Céu.”</blockquote>
-        <small>São Carlo Acutis</small>
-      </article>
-      <article class="verse">
-        <span>04</span>
-        <blockquote>“O nosso coração está inquieto enquanto não repousa em Ti.”</blockquote>
-        <small>Santo Agostinho</small>
-      </article>
-      <article class="verse">
-        <span>05</span>
-        <blockquote>“Tudo posso naquele que me fortalece.”</blockquote>
-        <small>Filipenses 4,13</small>
-      </article>
-      <article class="verse">
-        <span>06</span>
-        <blockquote>“Permanecei no meu amor.”</blockquote>
-        <small>João 15,9</small>
-      </article>
-      <article class="verse">
-        <span>07</span>
-        <blockquote>“Não temas, porque eu estou contigo.”</blockquote>
-        <small>Isaías 41,10</small>
-      </article>
-    </div>
-  </section>
-
-  <!-- MÚSICA - Spotify CORRIGIDO (embed) -->
-  <section class="music-section" id="musica">
-    <div class="section music-inner">
-      <div>
-        <p class="overline">TRILHA SONORA</p>
-        <h2>Uma playlist<br><em>para rezar e lembrar.</em></h2>
-        <p>Quem Canta Seus Males Espanta!</p>
-      </div>
-      <div class="music-card">
-        <div class="music-art">
-          <img src="sagrado-coracao.png" alt="">
-          <span>FÉ • ADORAÇÃO • ENTREGA</span>
-        </div>
-        <p class="overline">PLAYLIST DA EMILY</p>
-        <h3>O importante é a rosa</h3>
-        <div class="spotify-embed">
-          <iframe 
-            style="border-radius:12px" 
-            src="https://open.spotify.com/embed/playlist/1w1kWWTNrsnsDpbgTa2MTi?utm_source=generator" 
-            width="100%" 
-            height="352" 
-            frameBorder="0" 
-            allowfullscreen="" 
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-            loading="lazy">
-          </iframe>
-        </div>
-        <small class="code-hint">Músicas que nos fazem pensar na vida!</small>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <a class="footer-brand" href="#inicio">
-    <img src="santatere.png" alt="">
-    <span>Emily Lembre Cada dia que O importante é a Rosa!</span>
-  </a>
-  <p>Que Maria, Jesus e Santa Teresinha acompanhem cada passo da sua caminhada.</p>
-  <small>Feito com amor por Guilherme </small>
-  <a class="top" href="#inicio" aria-label="Voltar ao início">↑</a>
-</footer>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" aria-hidden="true">
-  <button id="closeLightbox" aria-label="Fechar">×</button>
-  <img id="bigPhoto" src="" alt="">
+  <!-- Rosa decorativa -->
+  <div class="rose-deco" aria-hidden="true">
+    <svg viewBox="0 0 180 230">
+      <path d="M91 218 C88 170 105 132 91 92" stroke="#77906b" stroke-width="5" fill="none"/>
+      <path d="M92 168 Q48 135 35 157 Q61 181 92 168" fill="#6e8a61"/>
+      <path d="M96 144 Q137 111 147 132 Q129 156 96 144" fill="#829a70"/>
+      <path d="M91 105 C54 95 45 66 68 48 C57 18 91 7 106 29 C133 15 153 46 134 66 C148 92 116 112 91 105Z" fill="#b6294c"/>
+      <path d="M91 102 C65 83 77 62 93 60 C75 42 103 28 117 48 C138 70 113 95 91 102Z" fill="#e95b75"/>
+      <path d="M90 99 C78 80 91 70 102 77 C116 85 103 98 90 99Z" fill="#8f1839"/>
+    </svg>
+  </div>
 </div>
 
-<script src="script.js"></script>
+<p class="credit">Feito com amor por Guilherme  •  Para Emily</p>
+
+<script>
+const video = document.getElementById('video');
+const playOverlay = document.getElementById('playOverlay');
+const endOverlay = document.getElementById('endOverlay');
+const progressBar = document.getElementById('progressBar');
+const progress = document.getElementById('progress');
+const timeEl = document.getElementById('time');
+
+function formatTime(s) {
+  if (!isFinite(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60).toString().padStart(2, '0');
+  return `${m}:${sec}`;
+}
+
+function startVideo() {
+  playOverlay.classList.add('hidden');
+  video.classList.add('playing');
+  video.play().catch(() => {
+    // se autoplay for bloqueado, o usuário já clicou, tenta de novo
+    video.play();
+  });
+}
+
+playOverlay.addEventListener('click', startVideo);
+playOverlay.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    startVideo();
+  }
+});
+
+video.addEventListener('timeupdate', () => {
+  if (video.duration) {
+    const pct = (video.currentTime / video.duration) * 100;
+    progressBar.style.width = pct + '%';
+    timeEl.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+  }
+});
+
+video.addEventListener('ended', () => {
+  endOverlay.classList.add('show');
+  video.classList.remove('playing');
+});
+
+// Clique na barra de progresso
+progress.addEventListener('click', e => {
+  if (!video.duration) return;
+  const rect = progress.getBoundingClientRect();
+  const ratio = (e.clientX - rect.left) / rect.width;
+  video.currentTime = ratio * video.duration;
+});
+
+// Se o usuário clicar no vídeo enquanto toca, pausa/retoma
+video.addEventListener('click', () => {
+  if (video.paused) video.play();
+  else video.pause();
+});
+</script>
 </body>
 </html>
