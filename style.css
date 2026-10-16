@@ -299,7 +299,7 @@ footer small{font-size:13px;color:#e8d5df88}
   .gallery.masonry{columns:2 140px;column-gap:10px}
   .photo{margin-bottom:10px}
   .faith{grid-template-columns:1fr}
-  .saint-img{width:500px;height:500px}
+  .saint-img{width:100px;height:100px}
   .music-inner{grid-template-columns:1fr;padding:70px 0}
   .spotify-embed iframe{height:300px !important}
   .deco{display:none}
