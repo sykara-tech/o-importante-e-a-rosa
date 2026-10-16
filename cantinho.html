@@ -321,9 +321,9 @@
   <!-- PALAVRAS -->
   <section class="section faith" id="palavras">
     <div class="faith-intro">
-      <p class="overline">PALAVRAS QUE ILUMINAM</p>
+      <p class="overline">PALAVRAS QUE ILUMINAM!</p>
       <h2>Frases para<br><em>seguir florescendo.</em></h2>
-      <p>Que estas palavras de santos e da Escritura sejam companhia em cada passo.</p>
+      <p>Que estas palavras de santos e da Escritura sejam companhia em cada passo!</p>
       <img src="santa-teresa.png" alt="Santa Teresinha" class="saint-img">
     </div>
     <div class="verse-list">
@@ -397,50 +397,160 @@
     </div>
   </section>
 </main>
+```html
 <article class="cantinho-frase-apoio">
+  <div class="cantinho-frase-apoio__ornamento">
+    <span class="cantinho-frase-apoio__linha"></span>
+    <span class="cantinho-frase-apoio__simbolo">✦</span>
+    <span class="cantinho-frase-apoio__linha"></span>
+  </div>
+
   <blockquote class="cantinho-frase-apoio__texto">
     <p class="cantinho-frase-apoio__paragrafo">
       Sempre estarei contigo!
     </p>
   </blockquote>
+
+  <div class="cantinho-frase-apoio__detalhe">
+    <span>❦</span>
+  </div>
 </article>
 
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@1,500;1,600;1,700&display=swap');
+
   .cantinho-frase-apoio {
+    --dourado: #d4af37;
+    --dourado-claro: #f5e3a5;
+    --roxo: #6a1b9a;
+    --vermelho: #a51d35;
+
+    position: relative;
+    isolation: isolate;
     width: 100%;
     box-sizing: border-box;
-    padding: 18px 12px;
+    padding: 30px 16px;
     text-align: center;
-    isolation: isolate;
+    overflow: hidden;
   }
 
-  .cantinho-frase-apoio .cantinho-frase-apoio__texto {
+  .cantinho-frase-apoio__ornamento {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 0 auto 12px;
+  }
+
+  .cantinho-frase-apoio__linha {
+    display: block;
+    width: clamp(35px, 10vw, 85px);
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--dourado),
+      var(--vermelho)
+    );
+  }
+
+  .cantinho-frase-apoio__linha:last-child {
+    transform: scaleX(-1);
+  }
+
+  .cantinho-frase-apoio__simbolo {
+    color: var(--dourado);
+    font-size: 19px;
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.45);
+  }
+
+  .cantinho-frase-apoio__texto {
+    position: relative;
     display: inline-block;
     max-width: 100%;
     box-sizing: border-box;
     margin: 0;
-    padding: 16px 12px;
-    border-top: 2px solid #d4af37;
-    border-bottom: 2px solid #d4af37;
-    background: transparent;
-    font-family: inherit;
-    font-size: clamp(26px, 4vw, 42px);
-    font-style: italic;
-    font-weight: 600;
-    line-height: 1.5;
-    color: #d4af37;
+    padding: 18px 24px;
+    border-top: 2px solid var(--dourado);
+    border-bottom: 2px solid var(--dourado);
+    border-radius: 3px;
+
+    background: linear-gradient(
+      135deg,
+      rgba(106, 27, 154, 0.07),
+      rgba(212, 175, 55, 0.08),
+      rgba(165, 29, 53, 0.06)
+    );
+
+    font-family: 'Great Vibes', 'Cormorant Garamond', cursive;
+    font-size: clamp(36px, 6vw, 60px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.35;
+
+    color: var(--roxo);
     text-align: center;
-    text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+
+    text-shadow:
+      1px 1px 0 rgba(212, 175, 55, 0.25),
+      0 0 18px rgba(106, 27, 154, 0.12);
+
+    transition:
+      color 0.3s ease,
+      text-shadow 0.3s ease;
   }
 
-  .cantinho-frase-apoio .cantinho-frase-apoio__paragrafo {
+  .cantinho-frase-apoio__texto::before,
+  .cantinho-frase-apoio__texto::after {
+    position: absolute;
+    color: var(--vermelho);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 35px;
+    line-height: 1;
+  }
+
+  .cantinho-frase-apoio__texto::before {
+    content: '❝';
+    top: -13px;
+    left: 5px;
+  }
+
+  .cantinho-frase-apoio__texto::after {
+    content: '❞';
+    right: 5px;
+    bottom: -17px;
+  }
+
+  .cantinho-frase-apoio__paragrafo {
     margin: 0;
     padding: 0;
     color: inherit;
     font: inherit;
     text-align: inherit;
   }
+
+  .cantinho-frase-apoio__detalhe {
+    margin-top: 14px;
+    color: var(--vermelho);
+    font-size: 27px;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(165, 29, 53, 0.18);
+  }
+
+  @media (hover: hover) {
+    .cantinho-frase-apoio__texto:hover {
+      color: var(--vermelho);
+      text-shadow: 0 0 18px rgba(212, 175, 55, 0.3);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cantinho-frase-apoio__texto {
+      transition: none;
+    }
+  }
 </style>
+```
 <footer>
   <a class="footer-brand" href="#inicio">
     <img src="rose.png" alt="">
@@ -448,7 +558,7 @@
   </a>
   <p>Que Jesus e Santa Teresinha acompanhem seus passos, fortaleçam seu coração e encham seus dias de esperança.</p>
   <small>Feito com carinho pelo seu Best favorito (ou não) ~Guilherme </small>
-  <p>Paz e Bem!</p>
+  <p><b>Paz e Bem!</b></p>
   <a class="top" href="#inicio" aria-label="Voltar ao início">↑</a>
 </footer>
 
