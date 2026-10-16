@@ -333,3 +333,34 @@ footer small{font-size:13px;color:#e8d5df88}
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
+
+
+/* Animações suaves de descida e brilho nas imagens */
+@keyframes descendIn {
+  0% { opacity: 0; transform: translate3d(0,-34px,0) scale(.985); }
+  70% { opacity: 1; transform: translate3d(0,4px,0) scale(1.005); }
+  100% { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+}
+@keyframes imageGlow {
+  0%,100% { filter: drop-shadow(0 0 5px #e6a6b155) drop-shadow(0 0 10px #d8b46d22); }
+  50% { filter: drop-shadow(0 0 9px #e6a6b1aa) drop-shadow(0 0 20px #d8b46d66); }
+}
+@keyframes frameGlow {
+  0%,100% { box-shadow: 0 8px 24px #3b17381c, 0 0 0 1px #e6a6b133; }
+  50% { box-shadow: 0 10px 30px #3b173833, 0 0 0 2px #e6a6b199, 0 0 22px #d8b46d55; }
+}
+.js-reveal { opacity: 0; transform: translateY(-28px); }
+.js-reveal.is-visible { animation: descendIn .85s cubic-bezier(.2,.75,.25,1) both; }
+.photo { transition: transform .35s ease, filter .35s ease; }
+.photo img { animation: imageGlow 4.8s ease-in-out infinite; transition: transform .45s ease, filter .35s ease; }
+.photo:hover { transform: translateY(-5px); }
+.photo:hover img { transform: scale(1.025); filter: drop-shadow(0 0 12px #e6a6b1cc) drop-shadow(0 0 22px #d8b46d88); }
+.hero-portrait, .hero-rose, .rose-art, .marian-image, .saint-img, .music-art, .sacred img {
+  animation: imageGlow 4.8s ease-in-out infinite;
+}
+.hero-portrait, .marian-visual, .music-card, .testimony-card { animation: frameGlow 5.5s ease-in-out infinite; }
+.lightbox img { filter: drop-shadow(0 0 18px #e6a6b188) drop-shadow(0 0 32px #d8b46d55); }
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal { opacity: 1; transform: none; }
+  .js-reveal.is-visible, .photo img, .hero-portrait, .hero-rose, .rose-art, .marian-image, .saint-img, .music-art, .sacred img, .marian-visual, .music-card, .testimony-card { animation: none !important; }
+}

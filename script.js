@@ -35,3 +35,28 @@ function closeBox() {
 document.querySelector("#closeLightbox").addEventListener("click", closeBox);
 box.addEventListener("click", e => { if (e.target === box) closeBox(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeBox(); });
+
+
+// Revela os blocos com efeito de descida conforme entram na tela.
+const revealTargets = document.querySelectorAll(
+  '.section, .rose-section, .gallery-section, .photo, .faith-intro, .marian-devotion, .music-card, .closing, .cantinho-frase-apoio'
+);
+
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -35px 0px' });
+
+  revealTargets.forEach((element, index) => {
+    element.classList.add('js-reveal');
+    element.style.animationDelay = `${Math.min(index % 4, 3) * 90}ms`;
+    revealObserver.observe(element);
+  });
+} else {
+  revealTargets.forEach(element => element.classList.add('is-visible'));
+}

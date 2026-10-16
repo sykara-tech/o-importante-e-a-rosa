@@ -140,6 +140,52 @@
 }
 
 </style>
+
+<style id="correcao-texto-animacoes">
+/* Correções responsivas: impedem que títulos, parágrafos e imagens sejam cortados. */
+html, body { max-width: 100%; }
+body { overflow-x: clip; }
+.hero, .hero-content { min-width: 0; max-width: 100%; }
+.hero-content { width: min(100%, 560px); }
+.hero h1 { max-width: 100%; overflow-wrap: anywhere; }
+.hero-text { width: 100%; max-width: 42rem; overflow-wrap: break-word; }
+.hero-rose { display:block; width:min(180px,42vw); height:auto; max-width:100%; margin:28px 0 0; object-fit:contain; filter:drop-shadow(0 12px 28px rgba(0,0,0,.35)); animation:rose-gentle 5s ease-in-out infinite; }
+.hero-content > * { animation: content-arrive .8s both; }
+.hero-content > *:nth-child(2) { animation-delay:.08s; }
+.hero-content > *:nth-child(3) { animation-delay:.16s; }
+.hero-content > *:nth-child(4) { animation-delay:.24s; }
+.hero-content > *:nth-child(5) { animation-delay:.32s; }
+.marian-devotion h2, .marian-intro { animation: content-arrive .9s both; }
+.marian-visual { animation: soft-float 7s ease-in-out infinite; }
+@keyframes content-arrive { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+@keyframes rose-gentle { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-8px) rotate(2deg); } }
+@keyframes soft-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-5px); } }
+@media (max-width:720px) {
+  .hero { width:100%; overflow:hidden; }
+  .hero-content { width:100%; padding:56px 22px 20px; margin:0; }
+  .hero h1 { font-size:clamp(36px, 10vw, 52px); letter-spacing:-1px; line-height:1.05; }
+  .hero-text { max-width:100%; font-size:14.5px; }
+  /* Em telas retrato, a rosa ocupa boa parte da largura disponível. */
+  .hero-rose {
+    width: min(82vw, 390px);
+    max-width: 100%;
+    height: auto;
+    margin: 28px auto 0;
+    object-fit: contain;
+    filter:
+      drop-shadow(0 0 10px rgba(231,177,189,.42))
+      drop-shadow(0 0 24px rgba(185,52,89,.28))
+      drop-shadow(0 12px 28px rgba(0,0,0,.35));
+  }
+  .hero-content { padding-bottom: 34px; }
+  .hero { min-height: 0; }
+  
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-content > *, .hero-rose, .marian-visual { animation:none!important; }
+}
+</style>
+
 </head>
 <body>
 
@@ -172,7 +218,7 @@
       <p class="pretitle">Para Emily, com muito carinho</p>
       <h1>O importante<br>é a <em>rosa!</em></h1>
       <p class="hero-text">Um cantinho feito com carinho, inspirado na pequena via de Santa Teresinha: amar nas coisas simples e deixar a fé florescer, um dia de cada vez.</p>
-      <img src="rose.png" alt="Rosa">
+      <img class="hero-rose" src="rose.png" alt="Rosa decorativa">
     </div>
   </section>
 

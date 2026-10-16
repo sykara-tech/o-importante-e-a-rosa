@@ -360,6 +360,17 @@ video.addEventListener('ended', () => {
   video.classList.remove('playing');
 });
 
+// Se o arquivo de vídeo ainda não estiver na pasta, não deixa a introdução presa.
+// O visitante continua podendo abrir o cantinho pelo mesmo botão final.
+video.addEventListener('error', () => {
+  playOverlay.classList.add('hidden');
+  endOverlay.classList.add('show');
+  const eyebrow = endOverlay.querySelector('.eyebrow');
+  const heading = endOverlay.querySelector('h2');
+  if (eyebrow) eyebrow.textContent = 'Uma surpresa preparada com carinho';
+  if (heading) heading.innerHTML = 'O importante é <em>a rosa!</em>';
+});
+
 // Clique na barra de progresso
 progress.addEventListener('click', e => {
   if (!video.duration) return;
