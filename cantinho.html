@@ -565,7 +565,332 @@
   <button id="closeLightbox" aria-label="Fechar">×</button>
   <img id="bigPhoto" src="" alt="">
 </div>
+<!-- PLAYER FLUTUANTE DE MÚSICA — EMILY -->
 
+<audio id="emily-audio" src="emily.mp3" loop preload="auto"></audio>
+
+<div id="emily-player" class="emily-player" aria-label="Player de música">
+  <div class="emily-capa">
+    <img
+      src="capa-emily.jpg"
+      alt="Capa da música para Emily"
+      onerror="this.style.display='none'; this.parentElement.classList.add('emily-sem-capa')"
+    >
+    <svg class="emily-icone-capa" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/>
+    </svg>
+  </div>
+
+  <div class="emily-info">
+    <span class="emily-etiqueta">UMA MÚSICA ESPECIAL</span>
+    <span class="emily-titulo">Alegria da Minha Juventude</span>
+    <span class="emily-status">
+      <span id="emily-ponto"></span>
+      <span id="emily-status-texto">Aguardando música</span>
+    </span>
+  </div>
+
+  <button id="emily-toggle" class="emily-botao" type="button" aria-label="Reproduzir música">
+    <svg id="emily-icone" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 5.5a1 1 0 0 1 1.5-.86l10 6.5a1 1 0 0 1 0 1.72l-10 6.5A1 1 0 0 1 8 18.5z" fill="currentColor"/>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .emily-player,
+  .emily-player * {
+    box-sizing: border-box;
+  }
+
+  .emily-player {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 99999;
+
+    width: min(350px, calc(100vw - 28px));
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+
+    color: #fff;
+    background: rgba(27, 21, 35, .96);
+    border: 1px solid rgba(222, 190, 245, .20);
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .30);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(.97);
+    pointer-events: none;
+
+    transition:
+      opacity .35s ease,
+      transform .35s ease,
+      visibility .35s ease;
+  }
+
+  .emily-player.emily-visivel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .emily-capa {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    flex: 0 0 50px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    color: #fff;
+    background: linear-gradient(135deg, #8b5cf6, #42216d);
+  }
+
+  .emily-capa img {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .emily-icone-capa {
+    width: 24px;
+    height: 24px;
+  }
+
+  .emily-capa:not(.emily-sem-capa) .emily-icone-capa {
+    display: none;
+  }
+
+  .emily-capa.emily-sem-capa img {
+    display: none;
+  }
+
+  .emily-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .emily-etiqueta {
+    color: #d7b4f3;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+
+  .emily-titulo {
+    overflow: hidden;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 750;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .emily-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    color: #aaa5b7;
+    font-size: 11px;
+  }
+
+  #emily-status-texto {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  #emily-ponto {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border-radius: 50%;
+    background: #88838f;
+  }
+
+  #emily-ponto.emily-tocando {
+    background: #1ed760;
+    box-shadow: 0 0 10px rgba(30, 215, 96, .5);
+  }
+
+  .emily-botao {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    color: #17131c;
+    background: #e6c4f7;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+  }
+
+  .emily-botao:hover {
+    background: #f1dcff;
+    transform: scale(1.07);
+  }
+
+  .emily-botao:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 4px;
+  }
+
+  .emily-botao svg {
+    display: block;
+    width: 21px;
+    height: 21px;
+  }
+
+  @media (max-width: 480px) {
+    .emily-player {
+      right: 14px;
+      bottom: 14px;
+      width: calc(100vw - 28px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .emily-player,
+    .emily-botao {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  const audio = document.getElementById("emily-audio");
+  const player = document.getElementById("emily-player");
+  const botao = document.getElementById("emily-toggle");
+  const icone = document.getElementById("emily-icone");
+  const ponto = document.getElementById("emily-ponto");
+  const status = document.getElementById("emily-status-texto");
+
+  if (!audio || !player || !botao || !icone || !ponto || !status) return;
+
+  let primeiraTentativaFeita = false;
+
+  const iconePlay = `
+    <path d="M8 5.5a1 1 0 0 1 1.5-.86l10 6.5a1 1 0 0 1 0 1.72l-10 6.5A1 1 0 0 1 8 18.5z"
+      fill="currentColor"/>`;
+
+  const iconePause = `
+    <path d="M7 5h4v14H7zM14 5h4v14h-4z"
+      fill="currentColor"/>`;
+
+  function atualizar() {
+    const tocando = !audio.paused;
+
+    icone.innerHTML = tocando ? iconePause : iconePlay;
+
+    botao.setAttribute(
+      "aria-label",
+      tocando ? "Pausar música" : "Reproduzir música"
+    );
+
+    ponto.classList.toggle("emily-tocando", tocando);
+
+    if (tocando) {
+      status.textContent = "Tocando agora";
+    } else if (audio.error) {
+      status.textContent = "Verifique o arquivo de música";
+    } else if (primeiraTentativaFeita) {
+      status.textContent = "Música pausada";
+    } else {
+      status.textContent = "Aguardando música";
+    }
+  }
+
+  function mostrarPlayer() {
+    player.classList.add("emily-visivel");
+  }
+
+  async function reproduzir() {
+    primeiraTentativaFeita = true;
+    mostrarPlayer();
+
+    try {
+      await audio.play();
+      atualizar();
+    } catch (erro) {
+      status.textContent = "Toque para reproduzir";
+      console.warn("A reprodução não foi iniciada.", erro);
+    }
+  }
+
+  function primeiraInteracao(evento) {
+    if (evento.type === "keydown") {
+      if (
+        evento.repeat ||
+        ["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab"]
+          .includes(evento.key)
+      ) {
+        return;
+      }
+    }
+
+    mostrarPlayer();
+
+    document.removeEventListener("pointerdown", primeiraInteracao, true);
+    document.removeEventListener("keydown", primeiraInteracao, true);
+    document.removeEventListener("click", primeiraInteracao, true);
+
+    reproduzir();
+  }
+
+  // A primeira interação do visitante revela o player e tenta iniciar a música.
+  document.addEventListener("pointerdown", primeiraInteracao, true);
+  document.addEventListener("keydown", primeiraInteracao, true);
+  document.addEventListener("click", primeiraInteracao, true);
+
+  // O botão permite reproduzir ou pausar a qualquer momento.
+  botao.addEventListener("click", async (evento) => {
+    evento.stopPropagation();
+
+    mostrarPlayer();
+
+    if (audio.paused) {
+      await reproduzir();
+    } else {
+      audio.pause();
+    }
+
+    atualizar();
+  });
+
+  audio.addEventListener("play", atualizar);
+  audio.addEventListener("pause", atualizar);
+
+  audio.addEventListener("error", () => {
+    status.textContent = "Verifique o arquivo de música";
+    console.error("Não foi possível carregar emily.mp3.");
+  });
+
+  atualizar();
+})();
+</script>
 <script src="script.js"></script>
 </body>
 </html>
